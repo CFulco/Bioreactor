@@ -53,7 +53,7 @@ def plot_experiment(e):
     plt.legend()
     
 from numpy import array
-experiments = [ExperimentData(Run=1, 
+experiments1 = [ExperimentData(Run=1, 
                               VCD_start=2.20, 
                               times=array([ 0, 2.73,  19.33,  26.52,  43.35,  68.03,  94.40, 117.88]), 
                               VCD=array([ 2.20, 1.98,  1.35,  3.14,  3.34,  3.57, 2.96, 2.54])), 
@@ -75,12 +75,25 @@ experiments = [ExperimentData(Run=1,
                               VCD=array([ 1.99, 2.05,  2.69,  3.75,  4.17,  3.59, 3.23])),
                ExperimentData(Run=6, 
                               VCD_start=1.96, 
-                              times=array([ 0, 2.73,  19.33,  43.36,  68.03,  94.39,  117.87]), 
+                              times=array([ 0, 2.73,  19.33,  43.36,  68.03,  94.39,  117.87]),
                               VCD=array([ 1.96, 2.08,  2.95,  3.89,  3.96,  3.43, 2.99])),
+               ExperimentData(Run=7,
+                              VCD_start=2.17,
+                              times=array([0, 2.74, 19.33, 43.36, 68.03, 94.39, 117.87]),
+                              VCD=array([2.17, 2.02, 2.87, 3.66, 4.28, 3.75, 3.20])),
+               ExperimentData(Run=8,
+                              VCD_start=2.00,
+                              times=array([0, 2.74, 19.33, 43.36, 68.03, 94.39, 117.87]),
+                              VCD=array([2.00, 2.07, 2.87, 3.64, 3.88, 3.80, 3.25])),
+               ExperimentData(Run=9,
+                              VCD_start=2.02,
+                              times=array([0, 2.74, 19.33, 43.36, 68.03, 94.39, 117.87]),
+                              VCD=array([2.02, 2.10, 2.80, 3.69, 3.89, 3.84, 3.28])),
 
               ]
               
-for i,e in enumerate(experiments):
+              
+for i,e in enumerate(experiments1):
     print("Experiment {}, called Run {}, ran for {} hours".format(i, e.Run, e.times[-1]))
     plot_experiment(e)
     
@@ -97,16 +110,16 @@ optimized_parameters = ParameterSet(0,0,0,0)
 
 standard_errors = ParameterSet(0,0,0,0)
 
-M = sum((len(e.times) for e in experiments))
+M = sum((len(e.times) for e in experiments1))
 print("In total will have M={} x_data entries".format(M))
 print("each with k=2 values, Run# and t")
 print("and M={} y_data entries, each being a VCD.".format(M))
 x_data = np.zeros((2,M))
 y_data = np.zeros(M)
 i=0
-for e in experiments:
+for e in experiments1:
     for time, VCD in zip(e.times, e.VCD):
-        x_data[0,i] = e.Run
+        x_data[0,i] = e.VCD_start
         x_data[1,i] = time
         y_data[i] = VCD
         i += 1
@@ -120,12 +133,12 @@ def my_model(x_data,
           Xo, # kJ/mol
           Yo,  # J/mol/K
          ):
-    Runs, ts = x_data
-    M = len(Runs) # number of data points
+    VCD_starts, ts = x_data
+    M = len(VCD_starts) # number of data points
     y_data = np.zeros(M)
     for i in range(M):
         t = ts[i]
-        Run = Runs[i]
+        VCD_start = VCD_starts[i]
         
         #R = 8.314 # J/mol/K
         #kf = 10**logA * np.exp(-Ea*1e3 / (R * T))
@@ -139,7 +152,7 @@ def my_model(x_data,
         #result = scipy.integrate.odeint(dcAdt, cA_start, [0,t])
         #cA = result[-1,0]
 
-        y_data[i] = Yo + a * np.sqrt(1 + (t - Xo)**2/b**2)
+        y_data[i] = Yo*VCD_start + a * np.sqrt(1 + (t - Xo)**2/b**2)
 
     return y_data
 
