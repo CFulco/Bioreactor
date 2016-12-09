@@ -100,8 +100,8 @@ for i,e in enumerate(experiments1):
 ParameterSet = namedtuple('ParameterSet', ['a', 'b', 'Xo', 'Yo'])
 
 starting_guess = ParameterSet(
-    a = -3 , 
-    b = 50. , 
+    a = 0 , 
+    b = 40. , 
     Xo = 65. , 
     Yo = 6.  
     )
@@ -152,7 +152,7 @@ def my_model(x_data,
         #result = scipy.integrate.odeint(dcAdt, cA_start, [0,t])
         #cA = result[-1,0]
 
-        y_data[i] = Yo*VCD_start + a * np.sqrt(1 + (t - Xo)**2/b**2)
+        y_data[i] = Yo + a * np.sqrt(1 + (t - Xo)**2/(-20.893*a+8.8452)**2)
 
     return y_data
 
@@ -162,6 +162,7 @@ optimal_parameters, covariance = scipy.optimize.curve_fit(my_model,
                                                           x_data,
                                                           y_data,
                                                          p0=starting_guess,
+                                                         bounds=([-3, 30, 40, 0], [0, 100, 80, 10]),
                                                          method='trf')
 
 print('fitted',optimal_parameters)

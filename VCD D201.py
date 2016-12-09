@@ -106,7 +106,7 @@ y_data = np.zeros(M)
 i=0
 for e in experiments:
     for time, VCD in zip(e.times, e.VCD):
-        x_data[0,i] = e.Run
+        x_data[0,i] = e.VCD_start
         x_data[1,i] = time
         y_data[i] = VCD
         i += 1
@@ -120,12 +120,12 @@ def my_model(x_data,
           Xo, # kJ/mol
           Yo,  # J/mol/K
          ):
-    Runs, ts = x_data
-    M = len(Runs) # number of data points
+    VCD_starts, ts = x_data
+    M = len(VCD_starts) # number of data points
     y_data = np.zeros(M)
     for i in range(M):
         t = ts[i]
-        Run = Runs[i]
+        VCD_start = VCD_starts[i]
         
         #R = 8.314 # J/mol/K
         #kf = 10**logA * np.exp(-Ea*1e3 / (R * T))
