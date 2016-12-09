@@ -87,7 +87,7 @@ for i,e in enumerate(experiments):
 ParameterSet = namedtuple('ParameterSet', ['a', 'b', 'Xo', 'Yo'])
 
 starting_guess = ParameterSet(
-    a = 1. , 
+    a = -1. , 
     b = 60. , 
     Xo = 30. , 
     Yo = 1.  
@@ -127,6 +127,9 @@ def my_model(x_data,
         t = ts[i]
         VCD_start = VCD_starts[i]
         
+        s = 30
+        q = -0.224
+        
         #R = 8.314 # J/mol/K
         #kf = 10**logA * np.exp(-Ea*1e3 / (R * T))
         #dG = dH*1e3 - T * dS # J/mol
@@ -139,7 +142,7 @@ def my_model(x_data,
         #result = scipy.integrate.odeint(dcAdt, cA_start, [0,t])
         #cA = result[-1,0]
 
-        y_data[i] = Yo + a * np.sqrt(1 + (t - Xo)**2/b**2)
+        y_data[i] = Yo + q * np.sqrt(1 + (t - 30)**2/b**2)
 
     return y_data
 

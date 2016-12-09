@@ -55,8 +55,8 @@ def plot_experiment(e):
 from numpy import array
 experiments1 = [ExperimentData(Run=1, 
                               VCD_start=2.20, 
-                              times=array([ 0, 2.73,  19.33,  26.52,  43.35,  68.03,  94.40, 117.88]), 
-                              VCD=array([ 2.20, 1.98,  1.35,  3.14,  3.34,  3.57, 2.96, 2.54])), 
+                              times=array([ 0, 2.73, 26.52,  43.35,  68.03,  94.40, 117.88]), 
+                              VCD=array([ 2.20, 1.98, 3.14,  3.34,  3.57, 2.96, 2.54])), 
                ExperimentData(Run=2, 
                               VCD_start=1.95, 
                               times=array([ 0, 2.72,  19.33,  43.36,  68.03,  94.39,  117.87]), 
@@ -100,9 +100,9 @@ for i,e in enumerate(experiments1):
 ParameterSet = namedtuple('ParameterSet', ['a', 'b', 'Xo', 'Yo'])
 
 starting_guess = ParameterSet(
-    a = 0 , 
+    a = -1 , 
     b = 40. , 
-    Xo = 65. , 
+    Xo = 73. , 
     Yo = 6.  
     )
     
@@ -140,6 +140,9 @@ def my_model(x_data,
         t = ts[i]
         VCD_start = VCD_starts[i]
         
+        s = 73
+        q = -1.646
+        
         #R = 8.314 # J/mol/K
         #kf = 10**logA * np.exp(-Ea*1e3 / (R * T))
         #dG = dH*1e3 - T * dS # J/mol
@@ -152,7 +155,7 @@ def my_model(x_data,
         #result = scipy.integrate.odeint(dcAdt, cA_start, [0,t])
         #cA = result[-1,0]
 
-        y_data[i] = Yo + a * np.sqrt(1 + (t - Xo)**2/(-20.893*a+8.8452)**2)
+        y_data[i] = Yo + q * np.sqrt(1 + (t - s)**2/b**2)
 
     return y_data
 
@@ -162,7 +165,7 @@ optimal_parameters, covariance = scipy.optimize.curve_fit(my_model,
                                                           x_data,
                                                           y_data,
                                                          p0=starting_guess,
-                                                         bounds=([-3, 30, 40, 0], [0, 100, 80, 10]),
+                                                         #bounds=([-3, 30, 40, 0], [0, 100, 80, 10]),
                                                          method='trf')
 
 print('fitted',optimal_parameters)
