@@ -159,8 +159,9 @@ def my_model(x_data,
         t = ts[i]
         VCD_start = VCD_starts[i]
         
-        s = 73
+        s = 73.8
         q = -1.766
+        r = 39.916
         
         #R = 8.314 # J/mol/K
         #kf = 10**logA * np.exp(-Ea*1e3 / (R * T))
@@ -174,7 +175,7 @@ def my_model(x_data,
         #result = scipy.integrate.odeint(dcAdt, cA_start, [0,t])
         #cA = result[-1,0]
 
-        y_data[i] = Yo + q * np.sqrt(1 + (t - s)**2/b**2)
+        y_data[i] = Yo + q * np.sqrt(1 + (t - s)**2/r**2)
 
     return y_data
 

@@ -99,7 +99,7 @@ standard_errors = ParameterSet(0,0,0,0)
 
 M = sum((len(e.times) for e in experiments))
 print("In total will have M={} x_data entries".format(M))
-print("each with k=2 values, Run# and t")
+print("each with k=6 values; Exp_Number, Initial_Cl, Initial_K, Initial_ Lac, VCD_Start, and t")
 print("and M={} y_data entries, each being a VCD.".format(M))
 x_data = np.zeros((2,M))
 y_data = np.zeros(M)
@@ -127,8 +127,9 @@ def my_model(x_data,
         t = ts[i]
         VCD_start = VCD_starts[i]
         
-        s = 30
-        q = -0.224
+        s = 30.568
+        q = -0.2243
+        r = 16.577
         
         #R = 8.314 # J/mol/K
         #kf = 10**logA * np.exp(-Ea*1e3 / (R * T))
@@ -142,7 +143,7 @@ def my_model(x_data,
         #result = scipy.integrate.odeint(dcAdt, cA_start, [0,t])
         #cA = result[-1,0]
 
-        y_data[i] = Yo + q * np.sqrt(1 + (t - 30)**2/b**2)
+        y_data[i] = Yo + q * np.sqrt(1 + (t - s)**2/r**2)
 
     return y_data
 
