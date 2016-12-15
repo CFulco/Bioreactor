@@ -268,8 +268,8 @@ InitialGuess = Variables(
     g = 3.9872 ,
     h = 11.193 ,
     i = 33.294 ,
-    j = 0.7036 ,
-    k = 0.3646 ,
+    j = 0.8067 ,
+    k = 0.1354 ,
     )
     
 FinalValues = Variables(0,0,0,0,0,0,0,0)
@@ -288,10 +288,10 @@ i=0
 for Data in AllData:
     for times, VCD in zip(Data.times, Data.VCD):
         #x_data[0,i] = Values.Exp_Number
-        x_data[1,i] = Values.Initial_Cl
-        x_data[2,i] = Values.Initial_K
-        x_data[3,i] = Values.Initial_Lac
-        x_data[4,i] = Values.VCD_start
+        x_data[1,i] = Data.Initial_Cl
+        x_data[2,i] = Data.Initial_K
+        x_data[3,i] = Data.Initial_Lac
+        x_data[4,i] = Data.VCD_start
         x_data[5,i] = times
         y_data[i] = VCD
         i += 1
@@ -323,8 +323,8 @@ def Model(x_data,
         alpha = f * (np.log(IK - ILac)) - g
         beta = h * np.log(-alpha) + i
         zeta = d * ( (ICl + IK)**(e))
-        gamma = 3/2 * (VCD_start) - alpha/beta*(zeta)
-        upsilon = j * ((np.e)**(k * gamma))
+        gamma = (VCD_start) - 3/2 * alpha/beta*(zeta)
+        upsilon = j * (gamma) + k
         
 
         y_data[i] = upsilon + alpha * np.sqrt(1 + (t - zeta)**2/beta**2)
@@ -335,10 +335,10 @@ ReturnValues, Covariance = scipy.optimize.curve_fit(Model,
                                                    x_data,
                                                    y_data,
                                                    p0=InitialGuess,
-                                                   bounds=([13649999, -3, 1.95, 3.5,10,30,0.65,0.3], [13650001, -2.5, 2, 4.5,12,35,0.75,0.4]),
+                                                   bounds=([13649999, -3, 1.95, 3.5,10,30,0.65,0.1], [13650001, -2.5, 2, 4.5,12,35,0.95,0.4]),
                                                    method='trf')
                                                    
-print('fitted',FinalValues)
+print('fitted',ReturnValues)
 stdev = np.sqrt(np.diag(Covariance))
 print('+/-',stdev,'(one sigma)')
 
